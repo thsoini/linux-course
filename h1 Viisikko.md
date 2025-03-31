@@ -25,12 +25,16 @@
 
 ## Tehtävät
 
+## Asenna Debian 12-Bookworm virtuaalikoneeseen
+Aikasemmalla kurssilla käytimme ubuntu pohjaista iso.filea minkä vuoksi ohjeistus oli erittäin hyvä, että itse alkuun pääsi.
+käytin Teron tekemää latausohjetta kyseiseen tehtävään. https://terokarvinen.com/2021/install-debian-on-virtualbox/ 
+
 ## Asenna Salt (salt-minion) Linuxille (uuteen virtuaalikoneeseesi).
 Salt asennus, käytin Salt Project sivuston ohjeita kyseiseen asennukseen https://docs.saltproject.io/salt/install-guide/en/latest/topics/install-by-operating-system/linux-deb.html 
 Tein polun Saltille käyttäen komentoa, mkdir -p /etc/apt/keyrings tämän jälkeen latasin julkisen avaimen Saltille käyttäen curl komentoa.
 ![1](https://github.com/user-attachments/assets/20352ec1-890c-44d5-b316-ae54c1391ac5)
 
-näiden jälkeen, lisäsin vielä toisen `curl` komennon mikä lataa suoraan uusimman version Saltista, sekä myös päivitys käyttäen komentoa sudo apt update.
+näiden jälkeen, lisäsin vielä toisen `curl` komennon mikä latasi suoraan uusimman version Saltista, sekä myös päivitys käyttäen komentoa sudo apt update.
 
 ![3](https://github.com/user-attachments/assets/2fe2cf2a-fcd9-4998-b96d-d6ce05f2e9f7)
 
@@ -43,7 +47,7 @@ Kyseisten steppien jälkeen latasin Salt minionin, tarkastin samalla kyseisen ve
 
 ### PGK
 
-Komennolla,  `sudo salt-call --local -l info state.single pkg.installed tree` , ladataan tree ja saadaan tulostus näkyviin.
+Komennolla,  `sudo salt-call --local -l info state.single pkg.installed tree` , latasin tree ja samalla sain ensimmäisen tulostuksen näkuviin.
 
 ![image](https://github.com/user-attachments/assets/526d4d33-30d6-4499-aa26-d51ce1edaf37)
 
@@ -53,15 +57,15 @@ Kyseinen tree myös poistetaan komennolla `sudo salt-call --local -l info state.
 
 ![image](https://github.com/user-attachments/assets/ff929018-a54d-4353-a823-ac4259a3ba2b)
 
-Tulostuksesta selviää function kohdasta mitä on tehty ja nyt huomasin myös, että kyseinen ei ole enää "new" vaan se on siirtynyt "old" kohtaan, ja edelliseen lataukseen liittyen tämäkin on onnistunut sillä "Result" kohta näyttää true ja alhaalla on tieto siitä, että se on "Succeeded" eikä "Failed"
+Tulostuksesta selviää function kohdasta mitä on tehty ja nyt huomasin myös, että kyseinen ei ole enää "new" vaan se on siirtynyt "old" kohtaan, ja edelliseen lataukseen liittyen tämäkin on onnistunut sillä "Result" kohta näyttää true ja alhaalla on tieto siitä, että se on "Succeeded 1" eikä "Failed"
 
 ### FILE
 
-Komennolla `sudo salt-call --local -l info state.single file.managed /tmp/hellotero` tehdään tyhjä tiedosto.
+Komennolla `sudo salt-call --local -l info state.single file.managed /tmp/hellotero` tein tyhjän tiedoston.
 
 ![image](https://github.com/user-attachments/assets/93a9d321-a352-4323-9be1-9f2406ab3d0b)
 
-Kuvasta nähdää kohdassa "INFO" sekä "Changes" että tiedoston luonti on onnistunut ja kommentti kertoo sen, että kyseinen on tyhjä eikä se sisällä mitään
+Kuvasta nähdää kohdassa "INFO" sekä "Changes" että tiedoston luonti on onnistui ja kommentti kertoo sen, että kyseinen on tyhjä tiedosto eikä se sisällä mitään
 
 Tämän jälkeen käytin komentoa `sudo salt-call --local -l info state.single file.managed /tmp/moitero contents="foo"`
 
@@ -69,20 +73,20 @@ Tämän jälkeen käytin komentoa `sudo salt-call --local -l info state.single f
 
 Edelliseen tulostukseen verrattean "Comment" kohtaan oli ilmestynyt teksti File "****" updated ja "changes" kohtaan oli tullut muutoksia aikaisemmin näkyi "new:" kyseinen kohta oli nyt nimellä "diff" ja ylhäällä "INFO" riville oli myös tullut teksti "File changed"
 
-Osion file viimeinen komento `sudo salt-call --local -l info state.single file.absent /tmp/hellotero` , puolestaan poistaa tiedoston
+Osion file viimeinen komento `sudo salt-call --local -l info state.single file.absent /tmp/hellotero` , puolestaan poisti tiedoston.
 
 ![image](https://github.com/user-attachments/assets/37d1dbf1-c8f7-441a-9e45-ca5808cd6689)
 
-Tulostuksesta selviää, että tiedosto on onnistuneesti poistettu, sillä failed on 0, "comment" kohdasta näkyi vielä selvästi mitä tehtiin.
+Tulostuksesta selvisi, että tiedosto on onnistuneesti poistettu, sillä failed on 0, "comment" kohdasta näkyi vielä selvästi mitä tehtiin.
 
 ### SERVICE
 Käynnistin servicen komennolla `sudo salt-call --local -l info state.single service.running apache2 enable=True`
 
 ![image](https://github.com/user-attachments/assets/4073c2ac-81f8-4c06-b442-60675286eb87)
-Sain ensimmäisen virheilmoituksen tähän mennessä kommentin perusteella kumminkin pystyin näkemään ongelman, sillä tiesin, että apache2 ei ole edes ladattu kyseiseen virtuaalikoneeseen
+Sain ensimmäisen virheilmoituksen tähän mennessä, kommentin perusteella kumminkin pystyin näkemään ongelman, sillä tiesin, että apache2 ei ole edes ladattu kyseiseen virtuaalikoneeseen
 
 Virhe korjattu kommennolla `sudo apt update && sudo apt install apache2` tämän jälkeen kokeilin uusiksi komentoa `sudo salt-call --local -l info state.single service.running apache2 enable=True`
-
+Komento löydetty , https://ubuntu.com/tutorials/install-and-configure-apache#2-installing-apache
 
 
 ![image](https://github.com/user-attachments/assets/02dc3895-cec3-493d-b3a9-90da6fb08c13)
@@ -116,11 +120,11 @@ Viimeinen komento jota piti syöttää oli `sudo salt-call --local -l info state
 
 ![image](https://github.com/user-attachments/assets/b0bfa0e0-d261-4bad-9c73-22efb672cf51)
 
-Tulostuksesta selviää mitä cmd komento tekee, se suorittaa touch komennon mikä luo tyhjän tiedoston /tmp/foo sijaintiin.
+Tulostuksesta selvisi mitä cmd komento tekee, se suorittaa touch komennon mikä luo tyhjän tiedoston /tmp/foo sijaintiin.
 
 ## Idempotentti
 
-Itselle aivan uusi käsite, minkä vuoksi pääsin lukemaan asiasta sivustolla, https://www.freecodecamp.org/news/idempotence-explained/
+Itselle oli aivan uusi käsite, minkä vuoksi pääsin lukemaan asiasta sivustolla, https://www.freecodecamp.org/news/idempotence-explained/
 
 Idempotentti tarkoittaa sitä, että vaikka kuinka monesti komento lyötäisiin serverille ei se muuta järjestelmän tilaa, yhtä lailla kun bussissa ensimmäisen kerran joku painaa stop nappulaa pysähtyy bussi seuraavalle pysäkille, vaikka kuinka monesti painaisit bussin stop painiketta ei bussi pysähdy seinään niin sanotusti.
 
@@ -138,19 +142,28 @@ Toinen kerta kun annoin saman komennon
 
 ![44](https://github.com/user-attachments/assets/f9e40377-57c8-4084-be9b-3972f8dc7242)
 
-
-Nyt tulee itse Idempotentti esiin, tulostuksessa näkyy, että kyseinen on jo asennettu. Vaikka annoin komennon, että lataa sovellus tree, se ei sitä suorita koska se tietää, että kyseinen on jo ladattu ja tästä syystä ilmoittaa vaan asiasta, että se on ladattu valmiiksi jo.
-
+Idempotentti tuli esiin toisessa tulostuksessa, tulostuksesta selviää, että kyseinen on jo asennettu. Vaikka annoin komennon, että lataa sovellus tree, se ei sitä suorita koska se tietää, että kyseinen on jo ladattu ja tästä syystä ilmoittaa vaan asiasta, että se on ladattu valmiiksi jo.
 
 
 
-
-
-Lähteet 
+### Tehtäviin meni noin 3h ja pannullinen kahvia.
 
 
 
+## Lähteet 
+
+Karvinen 2025: Palvelinten Hallinta https://terokarvinen.com/palvelinten-hallinta/
+
+Karvinen 2023: Run Salt Command Locally https://terokarvinen.com/2021/salt-run-command-locally/
+
+Karvinen 2018: Salt Quickstart – Salt Stack Master and Slave on Ubuntu Linux https://terokarvinen.com/2018/03/28/salt-quickstart-salt-stack-master-and-slave-on-ubuntu-linux/
+
+Karvinen 2006: Raportin kirjoittaminen https://terokarvinen.com/2006/06/04/raportin-kirjoittaminen-4/
+
+Karvinen 2024: Install Debian on Virtualbox - Updated 2024 https://terokarvinen.com/2021/install-debian-on-virtualbox/
+
+WMWare Inc: Salt Install Guide: Linux (DEB) https://docs.saltproject.io/salt/install-guide/en/latest/topics/install-by-operating-system/linux-deb.html
 
 Reintech 2024. Installing Apache on Debian 12: A Step-by-Step Guide https://reintech.io/blog/installing-apache-on-debian-12-step-by-step-guide 
 
-
+Ubuntu. Install and Configure Apache https://ubuntu.com/tutorials/install-and-configure-apache#2-installing-apache
